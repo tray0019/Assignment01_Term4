@@ -51,7 +51,7 @@ public class PhysicianDaoImpl implements PhysicianDao, Serializable {
 	private static final String READ_PHYSICIAN_BY_ID = "Select id, last_name, first_name, email, phone, specialty From physician Where id = ?";
 	//TODO Set the value of this string constant properly.  This is the SQL
 	//     statement to insert a new physician to the database.
-	private static final String INSERT_PHYSICIAN = null;
+	private static final String INSERT_PHYSICIAN = "Insert Into physician (last_name, first_name, email, phone, specialty) Values(?,?,?,?,?, NOW())";
 	//TODO Set the value of this string constant properly.  This is the SQL
 	//     statement to update the fields of a physician in the database.
 	private static final String UPDATE_PHYSICIAN_ALL_FIELDS = null;
@@ -144,8 +144,27 @@ public class PhysicianDaoImpl implements PhysicianDao, Serializable {
 	public PhysicianPojo createPhysician(PhysicianPojo physician) {
 		logMsg("creating a physician");
 		//TODO Complete the insertion of a new physician here
+		try {
+			createPstmt.setString(1,  physician.getLastName());
+			createPstmt.setString(2, physician.getFirstName());
+			createPstmt.setString(3, physician.getEmail());
+			createPstmt.setString(4, physician.getPhoneNumber());
+			createPstmt.setString(5, physician.getSpecialty());
+			
+			createPstmt.executeUpdate();
+			
+			try (ResultSet generatedKeys = createPstmt.getGeneratedKeys()){
+				if(generatedKeys.next()) {
+					physician.setId(generatedKeys.getInt(1));
+				}
+			}
+		}catch(SQLException e) {
+			logMsg("problem creating physician: "+ e.getLocalizedMessage());
+		}
+		
+		
 		//TODO Be sure to use try-and-catch statement
-		return null;
+		return physician;
 	}
 
 	/**

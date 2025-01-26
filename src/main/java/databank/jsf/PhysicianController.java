@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Map;
 
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.faces.annotation.SessionMap;
+import jakarta.faces.context.FacesContext;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import databank.dao.ListDataDao;
@@ -33,7 +35,9 @@ public class PhysicianController implements Serializable {
 
 	//TODO Use the proper annotations here so that this session map object will be 
 	//     injected.  Please refer to Week 3 sample project to know how this is to be done. 
-	private Map<String, Object> sessionMap;
+	@Inject
+	@SessionMap
+	private Map<String, Object> sessionMap = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
 
 	@Inject
 	private PhysicianDao physicianDao;
