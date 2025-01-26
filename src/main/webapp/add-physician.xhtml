@@ -19,6 +19,42 @@
     <h2>#{uiconsts['addButtonLabel']}</h2>
     <br/>
     <p>Create a physician here.  You can use "h:panelGrid", "h:outputText", "h:inputText", ""h:selectOneMenu", "f:selectItems", "h:commandButton", "h:form", and "h:outputLink"</p>
+    
+    <h:form>
+
+	    <h:outputText value="#{uiconsts['columnLabel_FirstName']}" />
+	    <h:inputText value="#{newPhysician.firstName}"/>
+	
+		<br />
+		
+	    <h:outputText value="#{uiconsts['columnLabel_LastName']}" />
+	    <h:inputText value="#{newPhysician.lastName}"/>
+	
+		<br />
+		
+	    <h:outputText value="#{uiconsts['columnLabel_Email']}" />
+	    <h:inputText value="#{newPhysician.email}"/>
+	    
+	    <br />
+	    
+	    <h:outputText value="#{uiconsts['columnLabel_PhoneNumber']}" />
+	    <h:inputText value="#{newPhysician.phoneNumber}"/>
+	    
+	    <br />
+	    
+	    <h:outputText value="#{uiconsts['columnLabel_Specialty']}" />
+	    <h:selectOneMenu value="#{newPhysician.specialty}">
+            <f:selectItems value="#{physicianController.specialties}" />
+        </h:selectOneMenu>
+	    
+	    <br />
+	    
+	    <h:commandButton value="#{uiconsts['submitButtonLabel']}"
+	    	action="#{physicianController.submitPhysician(newPhysician)}" />
+	    <h:outputLink value="list-physicians.xhtml">Back</h:outputLink>
+    
+    </h:form>
+    
     <p>Add a hyperlink to return to list-physicians.xhtml</p>
   </h:body>
 </html>

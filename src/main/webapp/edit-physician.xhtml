@@ -19,6 +19,41 @@
     <h2>#{uiconsts['updateLabel']}</h2>
     <br/>
     <p>Update a physician here.  You can use "h:panelGrid", "h:outputText", "h:inputText", "h:selectOneMenu", "f:selectItems", "h:commandButton", and "h:form"</p>
+    <h:form>
+
+	    <h:outputText value="#{uiconsts['columnLabel_FirstName']}" />
+	    <h:inputText value="#{existingPhysician.firstName}" required="true"/>
+	
+		<br />
+	    
+	    <h:outputText value="#{uiconsts['columnLabel_LastName']}" />
+	    <h:inputText value="#{existingPhysician.lastName}" required="true"/>
+	
+		<br />
+		
+	    <h:outputText value="#{uiconsts['columnLabel_Email']}" />
+	    <h:inputText value="#{existingPhysician.email}" required="true"/>
+	    
+	    <br />
+	    
+	    <h:outputText value="#{uiconsts['columnLabel_PhoneNumber']}" />
+	    <h:inputText value="#{existingPhysician.phoneNumber}" required="true"/>
+	    
+	    <br />
+	    
+	    <h:outputText value="#{uiconsts['columnLabel_Specialty']}" />
+	    <h:selectOneMenu value="#{existingPhysician.specialty}" required="true">
+            <f:selectItems value="#{physicianController.specialties}" />
+        </h:selectOneMenu>
+	    
+	    <br />
+	    
+	    <h:commandButton value="#{uiconsts['editButtonLabel']}"
+	    	action="#{physicianController.submitUpdatedPhysician(existingPhysician)}" />
+	    <h:outputLink value="list-physicians.xhtml">Back</h:outputLink>
+    
+    </h:form>
+    
     <h:outputLink value="list-physicians.xhtml">Back</h:outputLink>
   </h:body>
 </html>

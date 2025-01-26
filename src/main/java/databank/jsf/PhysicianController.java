@@ -17,6 +17,8 @@ import jakarta.inject.Named;
 import databank.dao.ListDataDao;
 import databank.dao.PhysicianDao;
 import databank.model.PhysicianPojo;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * Description:  Responsible for collection of Physician Pojo's in XHTML (list) <h:dataTable> </br>
@@ -70,26 +72,33 @@ public class PhysicianController implements Serializable {
 		//TODO Update the physician object with current date here.  You can use LocalDateTime::now().
 		//TODO Use DAO to insert the physician to the database
 		//TODO Do not forget to navigate the user back to list-physicians.xhtml
-		return null;
+		
+		physician.setCreated(LocalDateTime.now());
+		physicianDao.createPhysician(physician);
+		return "list-physicians.xhtml?faces-redirect=true";
 	}
 
 	public String navigateToUpdateForm(int physicianId) {
 		//TODO Use DAO to find the physician object from the database first
 		//TODO Use session map to keep track of of the object being edited
 		//TODO Do not forget to navigate the user to the edit/update form
-		return null;
+		PhysicianPojo existingPhysician = physicianDao.readPhysicianById(physicianId);
+		sessionMap.put("existingPhysician", existingPhysician);
+		return "edit-physician.xhtml?faces-redirect=true";
 	}
 
 	public String submitUpdatedPhysician(PhysicianPojo physician) {
 		//TODO Use DAO to update the physician in the database
 		//TODO Do not forget to navigate the user back to list-physicians.xhtml
-		return null;
+		physicianDao.updatePhysician(physician);
+		return "list-physicians.xhtml?faces-redirect=true";
 	}
 
 	public String deletePhysician(int physicianId) {
 		//TODO Use DAO to delete the physician from the database
 		//TODO Do not forget to navigate the user back to list-physicians.xhtml
-		return null;
+		physicianDao.deletePhysicianById(physicianId);
+		return "list-physicians.xhtml?faces-redirect=true";
 	}
 
 }
