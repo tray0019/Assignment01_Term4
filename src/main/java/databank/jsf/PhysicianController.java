@@ -11,8 +11,9 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-
+import jakarta.inject.Named;
 import databank.dao.ListDataDao;
 import databank.dao.PhysicianDao;
 import databank.model.PhysicianPojo;
@@ -23,6 +24,8 @@ import databank.model.PhysicianPojo;
  */
 
 //TODO Don't forget this is a managed bean with a session scope
+@Named
+@ApplicationScoped
 public class PhysicianController implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -39,7 +42,7 @@ public class PhysicianController implements Serializable {
 	private List<PhysicianPojo> physicians;
 
 	//Necessary methods to make controller work
-
+	
 	public void loadPhysicians() {
 		setPhysicians(physicianDao.readAllPhysicians());
 	}

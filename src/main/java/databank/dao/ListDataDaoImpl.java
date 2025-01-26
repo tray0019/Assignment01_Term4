@@ -15,8 +15,11 @@ import java.util.List;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
+import jakarta.annotation.Resource;
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.faces.context.ExternalContext;
 import jakarta.inject.Inject;
+import jakarta.inject.Named;
 import jakarta.servlet.ServletContext;
 import javax.sql.DataSource;
 
@@ -26,16 +29,18 @@ import javax.sql.DataSource;
  */
 //TODO Annotate this class so that it becomes a managed bean
 //TODO Provide the proper scope for this managed bean
+@Named
+@ApplicationScoped
 public class ListDataDaoImpl implements ListDataDao, Serializable {
 	/** Explicitly set serialVersionUID */
 	private static final long serialVersionUID = 1L;
 
 	//TODO Set the value of this string constant properly.  This is the JNDI name
 	//     for the data source.
-	private static final String DATABANK_DS_JNDI = null;
+	private static final String DATABANK_DS_JNDI = "java:app/jdbc/databank"; //Changes Added
 	//TODO Set the value of this string constant properly.  This is the SQL
 	//     statement to retrieve the list of specialties from the database.
-	private static final String READ_ALL_SPECIALTIES = null;
+	private static final String READ_ALL_SPECIALTIES = "Select name from specialty"; //Changes Added
 
 	@Inject
 	protected ExternalContext externalContext;
@@ -46,16 +51,22 @@ public class ListDataDaoImpl implements ListDataDao, Serializable {
 
 	//TODO Use the proper annotation here so that the correct data source object
 	//     will be injected
+	@Resource(lookup="java:app/jdbc/databank") //Addded
 	protected DataSource databankDS;
-
+	//TODO Use the proper annotation here so that the correct data source object
+	//     will be injected
 	protected Connection conn;
 	protected PreparedStatement readAllSpecialtiesPstmt;
-
+	
+	//TODO Use the proper annotation here so that the correct data source object
+		//     will be injected
 	@PostConstruct
 	protected void buildConnectionAndStatements() {
 		try {
 			logMsg("building connection and stmts");
 			conn = databankDS.getConnection();
+			//TODO Initialize PreparedStatement here
+			readAllSpecialtiesPstmt = conn.prepareStatement(READ_ALL_SPECIALTIES); //Added
 			//TODO Initialize PreparedStatement here
 		} catch (Exception e) {
 			logMsg("something went wrong getting connection from database:  " + e.getLocalizedMessage());
@@ -67,17 +78,32 @@ public class ListDataDaoImpl implements ListDataDao, Serializable {
 		try {
 			logMsg("closing stmts and connection");
 			//TODO Close PreparedStatement here
+			if(readAllSpecialtiesPstmt != null) readAllSpecialtiesPstmt.close();
+			if(conn != null) conn.close();
+			//TODO Close PreparedStatement here
 			conn.close();
 		} catch (Exception e) {
 			logMsg("something went wrong closing stmts or connection:  " + e.getLocalizedMessage());
 		}
 	}
 
+	/**
+	 * 6. MEthod to read Specialties from DB
+	 */
 	@Override
 	public List<String> readAllSpecialties() {
 		logMsg("reading all specialties");
 		List<String> specialties = new ArrayList<>();
 		//TODO Complete the retrieval of all specialties here
+		try(ResultSet rs = readAllSpecialtiesPstmt.executeQuery()){
+			while (rs.next()) {
+				specialties.add(rs.getString("name"));
+			}
+			
+		} catch (Exception e) {
+			logMsg("stmts or connection problem" + e.getLocalizedMessage());
+		}
+		
 		//TODO Be sure to use try-and-catch statement here
 		return specialties;
 
